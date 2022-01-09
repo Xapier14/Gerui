@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gerui.Interfaces
+namespace Gerui
 {
-    public interface IInteractable
+    public interface IInteractable : IComponent
     {
         public void OnClick(object sender, InteractionData data);
         public void OnHover(object sender, InteractionData data);

@@ -11,6 +11,6 @@ namespace Gerui
     public interface IDrawable
     {
         public Coord Offset { get; internal set; }
-        public void Draw(GraphicsEngine engine);
+        public void Draw(GraphicsEngine engine, Coord offset, object? data);
     }
 }

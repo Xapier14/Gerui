@@ -8,7 +8,7 @@ using GEngine;
 
 namespace Gerui
 {
-    public interface IPanel : IDrawable
+    public interface IPanel : IDrawable, IComponent
     {
         public bool HasFocus { get; internal set; }
         public Size Area { get; internal set; }

@@ -16,46 +16,88 @@ namespace Gerui
 {
     public class WindowController
     {
-        public List<IDrawable> Drawables { get; private set; }
+        public List<IComponent> Components { get; private set; }
         public List<Toolbar> Toolbars { get; private set; }
-        public List<IDrawable> Modals { get; private set; }
+
+        public IComponent? FocusedComponent { get; private set; }
+        public IComponent? HoveredComponent { get; internal set; }
+        internal object? FocusedComponentData { get; set; }
+
         public WindowController(SceneInstance scene)
         {
-            Console.WriteLine("Panel Controller Created!");
-            Drawables = new List<IDrawable>();
+            Debug.Log("[Gerui] Window Controller Created!");
+            Components = new List<IComponent>();
             Toolbars = new List<Toolbar>();
-            Modals = new List<IDrawable>();
+            FocusedComponent = null;
+            HoveredComponent = null;
+            FocusedComponentData = null;
         }
+
+        public void Update()
+        {
+            HoveredComponent = null;
+            foreach (Toolbar toolbar in Toolbars)
+            {
+                HoveredComponent = toolbar.GetHoveredComponent() != null ? toolbar.GetHoveredComponent() : HoveredComponent;
+                toolbar.Update(this);
+            }
+
+            foreach (IComponent component in Components)
+            {
+                HoveredComponent = component.GetHoveredComponent() != null ? component.GetHoveredComponent() : HoveredComponent;
+                component.Update(this);
+            }
+
+            if (FocusedComponent != null)
+            {
+                HoveredComponent = FocusedComponent.GetHoveredComponent() != null ? FocusedComponent.GetHoveredComponent() : HoveredComponent;
+                FocusedComponent.Update(this);
+            }
+        }
+
         public void DrawWindow(GraphicsEngine graphics)
         {
             var renderColor = graphics.GetRendererDrawColor();
             // Draw toolbars
-            int topY = 0;
-            int bottomY = graphics.GetInternalResolution().H;
+            Coord top = new();
+            Coord bottom = new(0, graphics.GetInternalResolution().H);
+            HoveredComponent = null;
             foreach (Toolbar toolbar in Toolbars)
             {
+                if (toolbar == FocusedComponent)
+                    continue;
                 if (toolbar.Anchor == ToolbarAnchor.Bottom)
                 {
-                    toolbar.Draw(graphics, bottomY - toolbar.Height);
-                    bottomY -= toolbar.Height;
+                    bottom.Y -= toolbar.Height;
+                    toolbar.Draw(graphics, bottom, null);
                 } else
                 {
                     // assume top anchor
-                    toolbar.Draw(graphics, topY);
-                    topY += toolbar.Height;
+                    toolbar.Draw(graphics, top, null);
+                    top.Y += toolbar.Height;
                 }
             }
 
             // Draw drawables
-            foreach (IDrawable drawable in Drawables)
+            foreach (IComponent component in Components)
             {
-                drawable.Draw(graphics);
+                if (component == FocusedComponent)
+                    continue;
+                component.Draw(graphics, top, new Coord(graphics.GetInternalResolution().W, bottom.Y));
             }
 
-            // Draw modals
-            foreach (IDrawable modal in Modals)
+            // Draw focused component
+            if (FocusedComponent != null)
             {
-                modal.Draw(graphics);
+                // draw a dark overlay for the whole window
+                Size windowSize = graphics.GetInternalResolution();
+                ColorRGBA dimColor = new(6, 8, 10, 180);
+                graphics.SetRenderDrawColor(dimColor);
+                graphics.DrawRectangleFilled(0, 0, windowSize.W, windowSize.H);
+
+                // re-draw our component
+                graphics.SetRenderDrawColor(ColorRGBA.WHITE);
+                FocusedComponent.Draw(graphics, Coord.Zero, FocusedComponentData);
             }
             graphics.SetRenderDrawColor(renderColor);
         }
