@@ -7,3 +7,20 @@ A simple and primitive GUI library for my 2D Game Engine, [GEngine-R](https://gi
 * Flexibility via IDrawables.
 * Lightweight.
 * Auto-sizing.
+
+## Implemented Controls
+[x] Toolbar
+    [x] Button
+    [x] Label
+    [ ] TextBox
+[x] Context Menu
+    [x] Button
+    [ ] Label
+    [ ] Divider
+    [ ] TextBox
+[ ] Button
+[ ] TextBox
+[ ] CheckBox
+[ ] Radio Button
+[ ] List Selector
+[ ] MessageBox
