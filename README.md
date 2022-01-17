@@ -9,21 +9,21 @@ A simple and primitive GUI library for my 2D Game Engine, [GEngine-R](https://gi
 * Auto-sizing.
 
 ## Implemented Controls
-[x] Toolbar
-    [x] Button
-    [x] Label
-    [ ] TextBox
-[x] Context Menu
-    [x] Button
-    [ ] Label
-    [ ] Divider
-    [ ] TextBox
-[ ] Grid
-    [ ] Vertical Separator
-    [ ] Horizontal Separator
-[ ] Button
-[ ] TextBox
-[ ] CheckBox
-[ ] Radio Button
-[ ] List Selector
-[ ] MessageBox
+- [x] Toolbar
+   - [x] Button
+   - [x] Label
+   - [ ] TextBox
+- [x] Context Menu
+   - [x] Button
+   - [ ] Label
+   - [ ] Divider
+   - [ ] TextBox
+- [ ] Grid
+   - [ ] Vertical Separator
+   - [ ] Horizontal Separator
+- [ ] Button
+- [ ] TextBox
+- [ ] CheckBox
+- [ ] Radio Button
+- [ ] List Selector
+- [ ] MessageBox
