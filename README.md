@@ -18,6 +18,9 @@ A simple and primitive GUI library for my 2D Game Engine, [GEngine-R](https://gi
     [ ] Label
     [ ] Divider
     [ ] TextBox
+[ ] Grid
+    [ ] Vertical Separator
+    [ ] Horizontal Separator
 [ ] Button
 [ ] TextBox
 [ ] CheckBox
