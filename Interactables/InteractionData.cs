@@ -8,9 +8,9 @@ namespace Gerui.Interactables
 {
     public struct InteractionData
     {
-        public object Data { get; private set; }
+        public object? Data { get; private set; }
 
-        public InteractionData(object data = null)
+        public InteractionData(object? data = null)
         {
             Data = data;
         }

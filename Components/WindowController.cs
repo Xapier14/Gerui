@@ -11,6 +11,7 @@ using GEngine.Engine;
 using static GEngine.GEngine;
 
 using Gerui.Components;
+using Gerui.EventHandlers;
 
 namespace Gerui
 {
@@ -23,6 +24,9 @@ namespace Gerui
         public IComponent? HoveredComponent { get; internal set; }
         internal object? FocusedComponentData { get; set; }
 
+        public event WindowEventHandler? OnLoad;
+        public event WindowEventHandler? OnUpdate;
+
         public WindowController(SceneInstance scene)
         {
             Debug.Log("[Gerui] Window Controller Created!");
@@ -33,26 +37,43 @@ namespace Gerui
             FocusedComponentData = null;
         }
 
+        public void Load()
+        {
+            OnLoad?.Invoke(null, this);
+        }
+
         public void Update()
         {
             HoveredComponent = null;
             foreach (Toolbar toolbar in Toolbars)
             {
-                HoveredComponent = toolbar.GetHoveredComponent() != null ? toolbar.GetHoveredComponent() : HoveredComponent;
-                toolbar.Update(this);
+                HoveredComponent = toolbar.GetHoveredComponent() ?? HoveredComponent;
+            }
+            foreach (IComponent component in Components)
+            {
+                HoveredComponent = component.GetHoveredComponent() ?? HoveredComponent;
+            }
+            if (FocusedComponent != null)
+            {
+                HoveredComponent = FocusedComponent.GetHoveredComponent() ?? HoveredComponent;
+            }
+
+            foreach (Toolbar toolbar in Toolbars)
+            {
+                toolbar.Update(this, this);
             }
 
             foreach (IComponent component in Components)
             {
-                HoveredComponent = component.GetHoveredComponent() != null ? component.GetHoveredComponent() : HoveredComponent;
-                component.Update(this);
+                component.Update(this, this);
             }
 
             if (FocusedComponent != null)
             {
-                HoveredComponent = FocusedComponent.GetHoveredComponent() != null ? FocusedComponent.GetHoveredComponent() : HoveredComponent;
-                FocusedComponent.Update(this);
+                FocusedComponent.Update(this, this);
             }
+
+            OnUpdate?.Invoke(null, this);
         }
 
         public void DrawWindow(GraphicsEngine graphics)

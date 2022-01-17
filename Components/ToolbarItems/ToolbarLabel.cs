@@ -56,7 +56,7 @@ namespace Gerui.Components
             }
         }
 
-        public override void Update(object? data)
+        public override void Update(WindowController window, object? data)
         {
 
         }

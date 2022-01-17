@@ -10,7 +10,7 @@ using static GEngine.GEngine;
 
 namespace Gerui.Components
 {
-    public abstract class Toolbar : IDrawable, IComponent
+    public abstract class Toolbar : IComponent
     {
         public ColorRGBA BackColor { get; set; }
         public int Height { get; set; }
@@ -53,11 +53,11 @@ namespace Gerui.Components
             return component;
         }
 
-        public void Update(object? data)
+        public void Update(WindowController window, object? data)
         {
             foreach (ToolbarItem item in Items)
             {
-                item.Update(data);
+                item.Update(window, data);
             }
         }
         public virtual void Draw(GraphicsEngine graphics, Coord offset, object? data)
@@ -68,7 +68,7 @@ namespace Gerui.Components
             LastDrawnPosition = offset;
 
             // make pos
-            int x1 = 0 + Offset.X, x2 = windowSize.W + Offset.X;
+            int x1 = offset.X + Offset.X, x2 = offset.Y + windowSize.W + Offset.X;
             int y1 = offset.Y + Offset.Y, y2 = offset.Y + Height + Offset.Y;
 
             // draw rect
@@ -88,7 +88,7 @@ namespace Gerui.Components
                 foreach (ToolbarItem item in Items)
                 {
                     // update y
-                    itemPos.Y = (Height - item.Size.H) / 2;
+                    itemPos.Y = ((Height - item.Size.H) / 2) + offset.Y;
 
                     // update x if RTL
                     itemPos.X -= ItemDirection == ToolbarItemDirection.RightToLeft ?

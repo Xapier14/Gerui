@@ -15,7 +15,7 @@ namespace Gerui.Components
     public class ToolbarButton : ToolbarItem, IButton
     {
         public string Text { get; set; }
-        public FontResource Font { get; set; }
+        public FontResource? Font { get; set; }
         public override ColorRGBA BackColor { get; set; }
         public ColorRGBA ForeColor { get; set; }
         public ColorRGBA BorderColor { get; set; }
@@ -31,9 +31,9 @@ namespace Gerui.Components
         public override Coord Padding { get; set; }
         public bool Highlight { get; set; }
 
-        public event ButtonEventHandler OnClick;
-        public event ButtonEventHandler OnMouseOver;
-        public event ButtonEventHandler OnMouseLeave;
+        public event ButtonEventHandler? OnClick;
+        public event ButtonEventHandler? OnMouseOver;
+        public event ButtonEventHandler? OnMouseLeave;
 
         private bool _lastHovered, _wasDown;
 
@@ -51,9 +51,9 @@ namespace Gerui.Components
             _wasDown = false;
         }
 
-        public override void Update(object? data)
+        public override void Update(WindowController window, object? data)
         {
-            bool hovering = IsMouseOver();
+            bool hovering = window.HoveredComponent == this;
             Highlight = hovering;
             if (hovering)
             {
@@ -73,10 +73,11 @@ namespace Gerui.Components
 
         public override void Draw(GraphicsEngine graphics, Coord offset, object? data)
         {
-            int x1 = offset.X, y1 = offset.Y;
-            int x2 = x1 + Size.W, y2 = y1 + Size.H;
+            int x1 = offset.X + Offset.X, y1 = offset.Y + Offset.Y;
+            int x2 = x1 + Size.W + Offset.X, y2 = y1 + Size.H + Offset.Y;
             graphics.SetRenderDrawColor(BackColor);
             graphics.DrawRectangleFilled(x1, y1, x2, y2);
+            graphics.DrawRectangle(x1, y2, x2, y2);
 
             if (Text != string.Empty && Font != null)
             {

@@ -10,14 +10,14 @@ using static GEngine.GEngine;
 
 namespace Gerui.Components
 {
-    public abstract class ToolbarItem : IDrawable, IComponent
+    public abstract class ToolbarItem : IComponent
     {
         public abstract Size Size { get; }
         public Coord Offset { get; set; }
         public abstract Coord Padding { get; set; }
         public abstract ColorRGBA BackColor { get; set; }
         public abstract void Draw(GraphicsEngine graphics, Coord offset, object? data);
-        public abstract void Update(object? data);
+        public abstract void Update(WindowController window, object? data);
         public Coord LastDrawnPosition { get; set; }
         public bool IsMouseOver()
         {

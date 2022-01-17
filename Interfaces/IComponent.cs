@@ -9,7 +9,7 @@ namespace Gerui
 {
     public interface IComponent : IDrawable
     {
-        public void Update(object? data);
+        public void Update(WindowController window, object? data);
         public bool IsMouseOver();
         public IComponent? GetHoveredComponent();
         internal Coord LastDrawnPosition { get; set; }
