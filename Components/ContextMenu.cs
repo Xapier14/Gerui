@@ -132,6 +132,11 @@ namespace Gerui.Components
                 {
                     item.Update(window, null);
                 }
+                if (window.HoveredComponent == null && Input.MouseLeftButtonDown)
+                {
+                    Visible = false;
+                    window.FocusedComponent = null;
+                }
             }
         }
     }
