@@ -12,6 +12,7 @@ namespace Gerui
         public void Update(WindowController window, object? data);
         public bool IsMouseOver();
         public IComponent? GetHoveredComponent();
+        public bool Visible { get; set; }
         internal Coord LastDrawnPosition { get; set; }
     }
 }
