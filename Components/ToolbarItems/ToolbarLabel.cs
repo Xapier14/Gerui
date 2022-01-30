@@ -25,6 +25,7 @@ namespace Gerui.Components
             }
         }
 
+        public override bool Visible { get; set; }
         public override Coord Padding { get; set; }
         public override ColorRGBA BackColor { get; set; }
         public ColorRGBA ForeColor { get; set; }
@@ -38,10 +39,14 @@ namespace Gerui.Components
             BackColor = ColorRGBA.TRANSPARENT;
             ForeColor = ColorRGBA.BLACK;
             Padding = new(2, 2);
+            Visible = true;
         }
 
         public override void Draw(GraphicsEngine graphics, Coord offset, object? data)
         {
+            LastDrawnPosition = new(offset);
+            if (!Visible)
+                return;
             int x1 = offset.X, y1 = offset.Y;
             int x2 = x1 + Size.W, y2 = y1 + Size.H;
             graphics.SetRenderDrawColor(BackColor);
