@@ -20,6 +20,7 @@ namespace Gerui.Components
         public ToolbarItemDirection ItemDirection { get; set; }
         public int ItemSpacing { get; set; }
         public Coord LastDrawnPosition { get; set; }
+        public bool Visible { get; set; }
 
         public Toolbar()
         {
@@ -30,6 +31,7 @@ namespace Gerui.Components
             Items = new List<ToolbarItem>();
             ItemDirection = ToolbarItemDirection.LeftToRight;
             ItemSpacing = 4; // px
+            Visible = true;
         }
         public bool IsMouseOver()
         {
@@ -66,6 +68,9 @@ namespace Gerui.Components
             // this is the default behavior for GEngine-R's AutoResize and HandleResize.
             Size windowSize = graphics.GetInternalResolution();
             LastDrawnPosition = offset;
+
+            if (!Visible)
+                return;
 
             // make pos
             int x1 = offset.X + Offset.X, x2 = offset.Y + windowSize.W + Offset.X;
