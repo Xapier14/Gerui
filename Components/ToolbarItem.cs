@@ -19,6 +19,7 @@ namespace Gerui.Components
         public abstract void Draw(GraphicsEngine graphics, Coord offset, object? data);
         public abstract void Update(WindowController window, object? data);
         public Coord LastDrawnPosition { get; set; }
+        public abstract bool Visible { get; set; }
         public bool IsMouseOver()
         {
             Coord cursor = Input.WindowMouse;
