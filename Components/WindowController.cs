@@ -12,6 +12,7 @@ using static GEngine.GEngine;
 
 using Gerui.Components;
 using Gerui.EventHandlers;
+using Gerui.Interfaces;
 
 namespace Gerui
 {
@@ -20,13 +21,12 @@ namespace Gerui
         public List<IComponent> Components { get; private set; }
         public List<Toolbar> Toolbars { get; private set; }
 
-        public IComponent? FocusedComponent { get; private set; }
+        public IComponent? FocusedComponent { get; set; }
         public IComponent? HoveredComponent { get; internal set; }
         internal object? FocusedComponentData { get; set; }
 
         public event WindowEventHandler? OnLoad;
         public event WindowEventHandler? OnUpdate;
-
         public WindowController(SceneInstance scene)
         {
             Debug.Log("[Gerui] Window Controller Created!");
@@ -35,10 +35,18 @@ namespace Gerui
             FocusedComponent = null;
             HoveredComponent = null;
             FocusedComponentData = null;
+            Game.OnWindowResize += WindowResizeEventHook;
         }
 
-        public void Load()
+        public void Load(ILayout layout)
         {
+            Components.Clear();
+            Toolbars.Clear();
+            FocusedComponent = null;
+            HoveredComponent = null;
+            FocusedComponentData = null;
+            OnLoad += layout.WindowLoad;
+            OnUpdate += layout.Update;
             OnLoad?.Invoke(null, this);
         }
 
@@ -49,11 +57,14 @@ namespace Gerui
             {
                 HoveredComponent = toolbar.GetHoveredComponent() ?? HoveredComponent;
             }
-            foreach (IComponent component in Components)
+            if (FocusedComponent == null)
             {
-                HoveredComponent = component.GetHoveredComponent() ?? HoveredComponent;
+                foreach (IComponent component in Components)
+                {
+                    HoveredComponent = component.GetHoveredComponent() ?? HoveredComponent;
+                }
             }
-            if (FocusedComponent != null)
+            else
             {
                 HoveredComponent = FocusedComponent.GetHoveredComponent() ?? HoveredComponent;
             }
@@ -72,6 +83,8 @@ namespace Gerui
             {
                 FocusedComponent.Update(this, this);
             }
+
+
 
             OnUpdate?.Invoke(null, this);
         }
@@ -114,13 +127,27 @@ namespace Gerui
                 Size windowSize = graphics.GetInternalResolution();
                 ColorRGBA dimColor = new(6, 8, 10, 180);
                 graphics.SetRenderDrawColor(dimColor);
-                graphics.DrawRectangleFilled(0, 0, windowSize.W, windowSize.H);
+                graphics.DrawRectangleFilled(0, top.Y, windowSize.W, bottom.Y);
 
                 // re-draw our component
                 graphics.SetRenderDrawColor(ColorRGBA.WHITE);
                 FocusedComponent.Draw(graphics, Coord.Zero, FocusedComponentData);
             }
             graphics.SetRenderDrawColor(renderColor);
+        }
+
+        public void WindowResizeEventHook(GameEngineEventArgs eventArg)
+        {
+            Size newSize = (Size)eventArg.Data;
+            Graphics.SetInternalResolution(newSize.W, newSize.H);
+            foreach (IComponent component in Components)
+            {
+                if (component is IWindowReactive)
+                {
+                    IWindowReactive reactiveComponent = (IWindowReactive) component;
+                    reactiveComponent.WindowResizedUpdate(this);
+                }
+            }
         }
     }
 }
