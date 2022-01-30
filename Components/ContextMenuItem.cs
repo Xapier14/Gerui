@@ -13,12 +13,12 @@ namespace Gerui.Components
         public Coord LastDrawnPosition { get; set; }
         public Coord Offset { get; set; }
         public abstract Size Size { get; }
+        public abstract bool Visible { get; set; }
         public abstract void Draw(GraphicsEngine graphics, Coord offset, object? data);
 
         public abstract IComponent? GetHoveredComponent();
 
         public abstract bool IsMouseOver();
-
         public abstract void Update(WindowController window, object? data);
     }
 }
